@@ -1,4 +1,4 @@
-# Reinforcement_Learning
+# reinforcement_learning
 
 This repository was created to share with my teacher my work on the RL TP.
 
