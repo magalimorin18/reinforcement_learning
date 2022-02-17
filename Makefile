@@ -1,6 +1,6 @@
 td2:
-	mkdir ./pages ./pages/td2
+	mkdir ./docs ./docs/td2
 	jupyter nbconvert --to html ./TD2/TD2.ipynb
-	mv ./TD2/TD2.html ./pages/td2/index.html
+	mv ./TD2/TD2.html ./docs/td2/index.html
 	jupyter nbconvert --to html ./TD2/TD2_discrete.ipynb
-	mv ./TD2/TD2_discrete.html ./pages/td2/discrete.html
+	mv ./TD2/TD2_discrete.html ./docs/td2/discrete.html
