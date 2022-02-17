@@ -15170,7 +15170,10 @@ The final estimate should be close to tensor([2.])
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="TODO">TODO<a class="anchor-link" href="#TODO">&#182;</a></h1>
+<p>DQN is basically the same as Q learning, the only thing that changes is the fact that Q is not anymore a table of values, but a neural network. This can be very practical when we have a problem with a huge number of states/actions or even infinite (with continuous values). For instance, in this problem of the pole cart, the state is represented by 4 physical values (positions and velocity). Those variables are of course continuous values (bounded by the space of the experiment for the positions).</p>
+<p>Therefore, we need to transform this "table of values" by a neural network (or any other machine learning model that can take in continuous values in fact) (if we do not want to discretize the values of course).</p>
+<p>The only painpoint of those QDN is that we need to change the way we update the values of Q. Instead of assigning the values, we want to make them change smoothly towards a maximum. Apart from that, it is not that different from the base Q learning</p>
+
 </div>
 </div>
 </div>
@@ -15679,6 +15682,7 @@ jp-needs-light-background
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h4 id="Question-5">Question 5<a class="anchor-link" href="#Question-5">&#182;</a></h4><p>Experiment the policy network.</p>
 <p>(Showing a video with a jupyter notebook, you may try this cell with Chrome/Chromium instead of Firefox. Otherwise, you may skip this question.)</p>
+<p><strong>You will not be able to see the video online, but I promise you it works, you have my word !</strong></p>
 
 </div>
 </div>
@@ -15706,7 +15710,6 @@ jp-needs-light-background
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="n">Video</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">video_folder</span><span class="p">,</span> <span class="s2">&quot;*.mp4&quot;</span><span class="p">))[</span><span class="mi">0</span><span class="p">])</span>
-<span class="c1">#show_video()</span>
 </pre></div>
 
      </div>
@@ -15811,7 +15814,11 @@ LEARNING_RATE = 0.1</code></pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">run_one</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Run once the training and evaluation of the model.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Run once the training and evaluation of the model.</span>
+<span class="sd">    </span>
+<span class="sd">    This make sure we restart from zero each times, and retrieve meaningfull informations.</span>
+<span class="sd">    For the losses and rewards, those are saved respectively at the end of each episode and every 3 episodes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">reset</span><span class="p">()</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">result</span><span class="p">[</span><span class="s1">&#39;episode_takens&#39;</span><span class="p">],</span> <span class="n">losses</span><span class="p">,</span> <span class="n">rewards_history</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -15833,7 +15840,7 @@ LEARNING_RATE = 0.1</code></pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="Question-6">Question 6<a class="anchor-link" href="#Question-6">&#182;</a></h4><p>Craft an experiment and study the influence of the <code>BUFFER_CAPACITY</code> on the learning process (speed of <em>convergence</em>, training curves...)</p>
+<h4 id="Question-6:-BUFER_CAPACITY">Question 6: BUFER_CAPACITY<a class="anchor-link" href="#Question-6:-BUFER_CAPACITY">&#182;</a></h4><p>Craft an experiment and study the influence of the <code>BUFFER_CAPACITY</code> on the learning process (speed of <em>convergence</em>, training curves...)</p>
 
 </div>
 </div>
@@ -15846,11 +15853,15 @@ LEARNING_RATE = 0.1</code></pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">previous_value</span> <span class="o">=</span> <span class="n">BUFFER_CAPACITY</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># We save the current value in a variable, to avoid problems for the other studies</span>
+<span class="c1"># we will change it back to the default value after.</span>
+<span class="c1"># It would have been better to put those values as argument of a function</span>
+<span class="c1"># But w&#39;ll do like that for now</span>
+<span class="n">previous_value</span> <span class="o">=</span> <span class="n">BUFFER_CAPACITY</span>
 
 
 <span class="n">nbr_values</span> <span class="o">=</span> <span class="mi">7</span>
-<span class="n">nbr_each</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">nbr_each</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Due to the randomness of the training, we do it several times for the same set of parameters</span>
 <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">with</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">nbr_values</span><span class="o">*</span><span class="n">nbr_each</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Compute the influence&quot;</span><span class="p">,</span> <span class="n">colour</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">nbr_values</span><span class="p">):</span>
@@ -16105,7 +16116,7 @@ LEARNING_RATE = 0.1</code></pre>
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">new_df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;losses&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;buffer&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Losses over time for different values of buffer&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Losses over time for different values of buffer&quot;</span><span class="p">);</span>
 </pre></div>
 
      </div>
@@ -16156,6 +16167,19 @@ jp-needs-light-background
 
 </div>
 
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>The above graphic shows the loss over time (after each episode / action). We wanted to see if there was an influence over the losses (and so the training of the model).
+Even if the final graphic is a bit overwhelmed with points, the values of the loss do not seem to be very different between the different colors (buffer sizes). We can say that the loss is not influenced by the buffer size</p>
+
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -16309,6 +16333,19 @@ jp-needs-light-background
 
 </div>
 
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>On this graphic, you can see the evolution of the reward over time for the different buffer sizes. Even if the graphic might be a bit biaised by the fact that the batch size is around 256 (and so, the first value is around 500). We can say that very low values of the buffer size (or close to the batch size) might restrain the model training performance, because it will reduce the number of seen actions (and so, learning points). 
+If you take a student and give him/her only one lesson, even if he/she is very good, he/she will not be able to learn as much as for a student with dozens of lessons. The same applies for those QDN models.</p>
+
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -16366,7 +16403,19 @@ jp-needs-light-background
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="Question-7">Question 7<a class="anchor-link" href="#Question-7">&#182;</a></h4><p>Craft an experiment and study the influence of the <code>UPDATE_TARGET_EVERY</code> on the learning process (speed of <em>convergence</em>, training curves...)</p>
+<p>This graphic show the "mean score" at the end of the experiment depending on the buffer capacity. We can clearly see on the left one that low values of buffer capacity leads to difficulties to learn the path to a perfect score.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h4 id="Question-7:-UPDATE_TARGET_EVERY">Question 7: UPDATE_TARGET_EVERY<a class="anchor-link" href="#Question-7:-UPDATE_TARGET_EVERY">&#182;</a></h4><p>Craft an experiment and study the influence of the <code>UPDATE_TARGET_EVERY</code> on the learning process (speed of <em>convergence</em>, training curves...)</p>
 
 </div>
 </div>
