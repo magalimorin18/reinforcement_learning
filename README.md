@@ -12,7 +12,7 @@
 
 ## :runner: Explore the code
 
-You can find the notebooks with our code on the likns below : 
+You can find the notebooks with our code on the links below : 
 
 ## Pages
 
