@@ -1,11 +1,18 @@
 # reinforcement_learning
 
-This repository was created to share with my teacher my work on the RL TP.
+## Students
 
-Each TP has its own branch. 
+[Marco Boucas](https://github.com/marcoboucas)
+[Magali Morin](https://github.com/magalimorin18)
 
-The solution is a notebook with the answer to each question.
+#### Due date
+:calendar: **20/02/2022** 
 
+
+
+## :runner: Explore the code
+
+You can find the notebooks with our code on the likns below : 
 
 ## Pages
 
